@@ -1,0 +1,40 @@
+package bookusers;
+
+import javax.swing.*;
+import java.util.ArrayList;
+
+public class FormMenu {
+    private JPanel panelPrincipal;
+    private JButton btnCreditos;
+    private JButton btnRegistrar;
+    private JButton btnListado;
+    private JLabel lblTitulo;
+
+    //lista de los usuarios registrados
+    private final ArrayList<Usuario> usuarios = new ArrayList<>();
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            FormMenu menu = new FormMenu();
+
+            JFrame ventana = new JFrame("BookUsers");
+            ventana.setContentPane(menu.panelPrincipal);
+            ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            ventana.setSize(1100, 800);
+            ventana.setLocationRelativeTo(null);
+            ventana.setVisible(true);
+        });
+    }
+
+    // acciones de los botones del menú
+    public FormMenu() {
+        btnCreditos.addActionListener(e -> {
+            FormCreditos creditos = new FormCreditos();
+            creditos.setVisible(true);
+        });
+        btnRegistrar.addActionListener(e -> {
+            FormRegistro registro = new FormRegistro(usuarios);
+            registro.setVisible(true);
+        });
+    }
+}
