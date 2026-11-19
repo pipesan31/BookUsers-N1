@@ -142,7 +142,7 @@
             </constraints>
             <properties>
               <font size="24" style="0"/>
-              <text value="Segundo apellido (opcional)"/>
+              <text value="Segundo apellido"/>
             </properties>
           </component>
           <component id="3f3" class="javax.swing.JTextField" binding="txtSegundoApellido">

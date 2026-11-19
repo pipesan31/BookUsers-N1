@@ -13,6 +13,10 @@ public class FormMenu {
     //lista de los usuarios registrados
     private final ArrayList<Usuario> usuarios = new ArrayList<>();
 
+
+    // Contador para asignar un ID único a cada usuario, empezando en 1
+    private int siguienteId = 1;
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             FormMenu menu = new FormMenu();
@@ -33,8 +37,12 @@ public class FormMenu {
             creditos.setVisible(true);
         });
         btnRegistrar.addActionListener(e -> {
-            FormRegistro registro = new FormRegistro(usuarios);
+            FormRegistro registro = new FormRegistro(usuarios, this);
             registro.setVisible(true);
         });
+    }
+    // Devuelve el siguiente ID disponible y aumenta el contador
+    public int generarId() {
+        return siguienteId++;
     }
 }

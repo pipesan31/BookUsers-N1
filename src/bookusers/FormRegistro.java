@@ -3,6 +3,12 @@ package bookusers;
 import javax.swing.*;
 //importa Arraylist para crear listas que almacenan varios objetos
 import java.util.ArrayList;
+//permite eliminar tildes y que quede en minuscula los caracteres
+import java.text.Normalizer;
+// Permiten detectar cambios en los campos de texto
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 
 public class FormRegistro extends JFrame {
     private javax.swing.JPanel panelPrincipal;
@@ -22,15 +28,27 @@ public class FormRegistro extends JFrame {
 
     private final ArrayList<Usuario> usuarios;
 
-    // Recibe la lista de usuarios y configura la ventana de registro
-    public FormRegistro(ArrayList<Usuario> usuarios) {
+    // Guarda la referencia al menú principal para generar los ID
+    private final FormMenu menu;
+
+    // Guarda la ubicación de la fotografía seleccionada
+    private String rutaFoto = "";
+
+    // Recibe la lista de usuarios y la referencia al menú principal
+    public FormRegistro(ArrayList<Usuario> usuarios, FormMenu menu) {
+
         this.usuarios = usuarios;
+
+        // Guarda la referencia al menú principal
+        this.menu = menu;
 
         setTitle("BookUsers - Registro");
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(1500, 1000);
         setLocationRelativeTo(null);
+        // Activa la actualización automática del username
+        configurarUsernameAutomatico();
 
         // Ejecuta las validaciones cuando se presiona Guardar
         btnGuardar.addActionListener(e -> {
@@ -78,5 +96,81 @@ public class FormRegistro extends JFrame {
         }
 
         return true;
+    }
+
+    // Guarda los datos de un nuevo usuario en la lista compartida
+    private void guardarUsuario() {
+
+        String tipoIdentificacion = (String) cmbTipoIdentificacion.getSelectedItem();
+        String numeroIdentificacion = txtNumeroIdentificacion.getText().trim();
+        String primerNombre = txtPrimerNombre.getText().trim();
+        String segundoNombre = txtSegundoNombre.getText().trim();
+        String primerApellido = txtPrimerApellido.getText().trim();
+        String segundoApellido = txtSegundoApellido.getText().trim();
+        String password = new String(txtPassword.getPassword());
+        String telefono = txtTelefono.getText().trim();
+        String correo = txtCorreo.getText().trim();
+    }
+
+    // elimina tildes, convierte la ñ en en y quita espacios
+    private String limpiarTexto(String texto) {
+
+        String resultado = Normalizer.normalize(texto.trim().toLowerCase(), Normalizer.Form.NFD);
+
+        return resultado.replaceAll("\\p{M}", "").replaceAll("\\s+", "");
+    }
+
+    // Genera el username a partir del nombre y los apellidos
+    private String generarUsername() {
+
+        // Obtiene y limpia los datos del formulario
+        String nombre = limpiarTexto(txtPrimerNombre.getText());
+        String apellido1 = limpiarTexto(txtPrimerApellido.getText());
+        String apellido2 = limpiarTexto(txtSegundoApellido.getText());
+
+        // Evita generar el username si faltan datos obligatorios
+        if (nombre.isEmpty() || apellido1.isEmpty()) {
+            return "";
+        }
+
+        // Combina las iniciales de los apellidos con el nombre
+        String inicial1 = apellido1.substring(0, 1);
+        String inicial2 = apellido2.isEmpty() ? "" : apellido2.substring(0, 1);
+
+        return inicial1 + inicial2 + nombre;
+    }
+    // Actualiza el username que se muestra en el formulario
+    private void actualizarUsername() {
+        lblUsername.setText(generarUsername());
+    }
+
+    // Detecta cambios en los nombres y apellidos para actualizar el username
+    private void configurarUsernameAutomatico() {
+
+        DocumentListener listener = new DocumentListener() {
+
+            @Override
+            //detecta cuando escribimos texto
+            public void insertUpdate(DocumentEvent e) {
+                actualizarUsername();
+            }
+
+            @Override
+            //detecta cuadno borramos texto
+            public void removeUpdate(DocumentEvent e) {
+                actualizarUsername();
+            }
+
+            @Override
+            //detecta cambios de atributos del documento
+            public void changedUpdate(DocumentEvent e) {
+                actualizarUsername();
+            }
+        };
+
+        // Conecta el listener con los campos del formulario
+        txtPrimerNombre.getDocument().addDocumentListener(listener);
+        txtPrimerApellido.getDocument().addDocumentListener(listener);
+        txtSegundoApellido.getDocument().addDocumentListener(listener);
     }
 }
