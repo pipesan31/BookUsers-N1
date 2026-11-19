@@ -8,6 +8,14 @@ import java.text.Normalizer;
 // Permiten detectar cambios en los campos de texto
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import com.sha2cs.inputfile.InputFile;
+// Permite trabajar con archivos seleccionados del computador
+import java.io.File;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Font;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 
 public class FormRegistro extends JFrame {
@@ -33,6 +41,7 @@ public class FormRegistro extends JFrame {
 
     // Guarda la ubicación de la fotografía seleccionada
     private String rutaFoto = "";
+    private static File ultimaCarpetaFoto;
 
     // Recibe la lista de usuarios y la referencia al menú principal
     public FormRegistro(ArrayList<Usuario> usuarios, FormMenu menu) {
@@ -50,13 +59,47 @@ public class FormRegistro extends JFrame {
         // Activa la actualización automática del username
         configurarUsernameAutomatico();
 
-        // Ejecuta las validaciones cuando se presiona Guardar
-        btnGuardar.addActionListener(e -> {
-            if (validarCampos()) {
-                JOptionPane.showMessageDialog(this,
-                        "Validaciones correctas");
+        // Permite seleccionar una fotografía y mostrarla en el formulario
+        btnCargarFoto.addActionListener(e -> {
+
+            // Abre un selector amplio y conserva el filtro de imágenes.
+            JFileChooser selector = new JFileChooser(ultimaCarpetaFoto);
+            selector.setDialogTitle("BookUsers - Seleccionar fotografía");
+            selector.setAcceptAllFileFilterUsed(false);
+            selector.setFileFilter(new FileNameExtensionFilter(
+                    "Imágenes PNG y JPG", "png", "jpg", "jpeg"));
+            ampliarFuenteSelector(selector);
+            selector.setPreferredSize(new Dimension(1200, 800));
+
+            if (selector.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) {
+                return;
+            }
+
+            File foto = selector.getSelectedFile();
+            ultimaCarpetaFoto = foto.getParentFile();
+
+            // Conserva la carga y el escalado de la imagen de la librería.
+            if (InputFile.mostrar(lblFoto, foto)) {
+                rutaFoto = foto.getAbsolutePath();
             }
         });
+
+        // Guarda el usuario únicamente si los datos son válidos
+        btnGuardar.addActionListener(e -> {
+            if (validarCampos()) {
+                guardarUsuario();
+            }
+        });
+    }
+
+    // Amplía las letras de los controles internos del selector de archivos.
+    private void ampliarFuenteSelector(Component componente) {
+        componente.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 24));
+        if (componente instanceof Container contenedor) {
+            for (Component hijo : contenedor.getComponents()) {
+                ampliarFuenteSelector(hijo);
+            }
+        }
     }
 
     // Verifica que los campos obligatorios estén completos
@@ -110,6 +153,60 @@ public class FormRegistro extends JFrame {
         String password = new String(txtPassword.getPassword());
         String telefono = txtTelefono.getText().trim();
         String correo = txtCorreo.getText().trim();
+        String username = generarUsername();
+        int id = menu.generarId();
+
+        // Crea un objeto Usuario con los datos del formulario
+        Usuario nuevoUsuario = new Usuario(
+                id, tipoIdentificacion, numeroIdentificacion,
+                primerNombre, segundoNombre,
+                primerApellido, segundoApellido,
+                username, password, telefono, correo, rutaFoto
+        );
+
+        usuarios.add(nuevoUsuario);
+
+        // Confirma que el usuario fue registrado correctamente
+        JOptionPane.showMessageDialog(
+                this,
+                "Usuario registrado correctamente.\nID asignado: " + id,
+                "Registro exitoso",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+        limpiarFormulario();
+    }
+
+    // Limpia los campos después de registrar un usuario
+    private void limpiarFormulario() {
+
+        // Borra los datos de identificación
+        txtNumeroIdentificacion.setText("");
+
+        // Regresa el tipo de identificación a la primera opción
+        cmbTipoIdentificacion.setSelectedIndex(0);
+
+        // Borra los nombres y apellidos
+        txtPrimerNombre.setText("");
+        txtSegundoNombre.setText("");
+        txtPrimerApellido.setText("");
+        txtSegundoApellido.setText("");
+
+        // Borra la contraseña y los datos de contacto
+        txtPassword.setText("");
+        txtTelefono.setText("");
+        txtCorreo.setText("");
+
+        // Limpia el username mostrado
+        lblUsername.setText("");
+
+        // Elimina la fotografía mostrada en el formulario
+        InputFile.limpiar(lblFoto);
+
+        // Borra la ruta para que no se asigne al siguiente usuario
+        rutaFoto = "";
+
+        // Muestra un texto cuando no hay fotografía seleccionada
+        lblFoto.setText("Sin foto");
     }
 
     // elimina tildes, convierte la ñ en en y quita espacios

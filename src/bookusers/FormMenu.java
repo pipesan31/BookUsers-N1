@@ -1,6 +1,8 @@
 package bookusers;
 
 import javax.swing.*;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.util.ArrayList;
 
 public class FormMenu {
@@ -19,6 +21,11 @@ public class FormMenu {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
+            // Amplía los mensajes y botones de las alertas y confirmaciones.
+            UIManager.put("OptionPane.minimumSize", new Dimension(800, 300));
+            UIManager.put("OptionPane.messageFont", new Font(Font.SANS_SERIF, Font.PLAIN, 28));
+            UIManager.put("OptionPane.buttonFont", new Font(Font.SANS_SERIF, Font.BOLD, 24));
+
             FormMenu menu = new FormMenu();
 
             JFrame ventana = new JFrame("BookUsers");
