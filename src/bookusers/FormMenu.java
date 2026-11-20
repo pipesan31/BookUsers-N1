@@ -30,6 +30,7 @@ public class FormMenu {
 
             JFrame ventana = new JFrame("BookUsers");
             ventana.setContentPane(menu.panelPrincipal);
+            ventana.setTitle("Menú - BookUsers - Luis Santos ");
             ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             ventana.setSize(1100, 800);
             ventana.setLocationRelativeTo(null);

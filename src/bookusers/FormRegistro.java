@@ -54,7 +54,7 @@ public class FormRegistro extends JFrame {
         // Guarda la referencia al menú principal
         this.menu = menu;
 
-        setTitle("BookUsers - Registro");
+        setTitle("BookUsers - Registro - Luis Santos");
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(1500, 1000);

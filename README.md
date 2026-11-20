@@ -49,3 +49,37 @@ Todo el código (formularios, clases y paquetes) lo crea cada estudiante en su p
 - Lo que se revisa es el **historial de commits** del Pull Request: fechas, tamaño y orden de los cambios.
 - Un solo commit con todo el proyecto no demuestra el proceso de trabajo.
 - Los forks de un repositorio público son públicos: el código y el historial de cada estudiante son visibles.
+
+
+
+# BookUsers
+
+Proyecto final de Programación Orientada a Objetos.
+
+## Desarrollador
+
+- Nombre completo: Luis Felipe Santos Leon
+- Código estudiantil: UNP-NN79-WVF4
+
+## Tecnologías
+
+- Java 21
+- Java Swing
+- IntelliJ IDEA
+
+## Cómo ejecutar el proyecto
+
+1. Clonar o descargar el repositorio.
+2. Abrir el proyecto en IntelliJ IDEA.
+3. Configurar el JDK 21.
+4. Verificar que las librerías de la carpeta `lib` estén configuradas.
+5. Ejecutar el método `main` de `FormMenu.java`.
+
+## Funcionalidades
+
+- Registrar usuarios con fotografía.
+- Listar usuarios registrados.
+- Consultar el detalle de un usuario.
+- Generar un PDF con sus datos.
+- Actualizar usuarios.
+- Eliminar usuarios con confirmación.

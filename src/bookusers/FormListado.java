@@ -17,7 +17,7 @@ public class FormListado extends JFrame {
     public FormListado(ArrayList<Usuario> usuarios, FormMenu menu) {
         this.menu = menu;
         this.usuarios = usuarios;
-        setTitle("BookUsers - Usuarios registrados");
+        setTitle("BookUsers - Usuarios registrados - Luis Santos");
         setContentPane(panelPrincipal);
 
         // crea el modelo que almacenará los usuarios
