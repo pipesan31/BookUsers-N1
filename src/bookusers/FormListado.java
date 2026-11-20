@@ -30,5 +30,22 @@ public class FormListado extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(1200, 850);
         setLocationRelativeTo(null);
+
+        // se programa la accion del boton ver detalle
+        btnVerDetalle.addActionListener(e -> {
+
+            //obtiene el usuario seleccionado en el Jlist
+            Usuario seleccionado = (Usuario) lstUsuarios.getSelectedValue();
+
+            // comprueba que si se haya seleccionado un usuario
+           if (seleccionado == null) {
+               JOptionPane.showMessageDialog(this, "Debe seleccionar un usuario");
+               return;
+           }
+
+           //abre la ventana con los datos del usuario seleccionado
+           FormDetalle detalle  = new FormDetalle(seleccionado);
+           detalle.setVisible(true);
+        });
     }
 }
