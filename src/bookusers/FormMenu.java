@@ -47,6 +47,10 @@ public class FormMenu {
             FormRegistro registro = new FormRegistro(usuarios, this);
             registro.setVisible(true);
         });
+        btnListado.addActionListener(e -> {
+           FormListado listado = new FormListado(usuarios);
+           listado.setVisible(true);
+        });
     }
     // Devuelve el siguiente ID disponible y aumenta el contador
     public int generarId() {
