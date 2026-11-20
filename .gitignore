@@ -30,3 +30,5 @@ bin/
 .DS_Store
 ### Java ###
 *.class
+# Evita subir a GitHub los PDF generados por BookUsers
+*.pdf

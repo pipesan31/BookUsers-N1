@@ -246,12 +246,13 @@
         <children>
           <component id="3fc" class="javax.swing.JLabel" binding="lblFoto">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                <minimum-size width="210" height="180"/>
-                <preferred-size width="320" height="300"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false">
+                <minimum-size width="420" height="420"/>
+                <preferred-size width="420" height="420"/>
               </grid>
             </constraints>
             <properties>
+              <preferredSize width="420" height="420"/>
               <font size="22" style="0"/>
               <horizontalAlignment value="0"/>
               <text value="Vista previa de fotografía"/>
