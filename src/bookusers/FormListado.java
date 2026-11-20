@@ -8,10 +8,14 @@ public class FormListado extends JFrame {
     private JList<Usuario> lstUsuarios;
     private JButton btnVerDetalle;
     private JButton btnEliminar;
+    private JButton btnActualizar;
 
     private final ArrayList<Usuario> usuarios;
 
-    public FormListado(ArrayList<Usuario> usuarios) {
+    private final FormMenu menu;
+
+    public FormListado(ArrayList<Usuario> usuarios, FormMenu menu) {
+        this.menu = menu;
         this.usuarios = usuarios;
         setTitle("BookUsers - Usuarios registrados");
         setContentPane(panelPrincipal);
@@ -49,7 +53,7 @@ public class FormListado extends JFrame {
            detalle.setVisible(true);
         });
 
-        // Detecta cuando se presiona el botón Eliminar usuario
+        // Detecta cuando se presiona el botón Eliminar
         btnEliminar.addActionListener(e -> {
 
             // Obtiene el usuario seleccionado en la lista
@@ -82,5 +86,32 @@ public class FormListado extends JFrame {
             // Confirma que el usuario fue eliminado correctamente
             JOptionPane.showMessageDialog(this, "Usuario eliminado correctamente.", "Eliminación exitosa", JOptionPane.INFORMATION_MESSAGE);
         });
+
+        // Detecta cuando se presiona el botón Actualizar
+        btnActualizar.addActionListener(e -> {
+
+            // Obtiene el usuario seleccionado en el listado
+            Usuario seleccionado = (Usuario) lstUsuarios.getSelectedValue();
+
+            // Comprueba que se haya seleccionado un usuario
+            if (seleccionado == null) {
+                JOptionPane.showMessageDialog(this,
+                        "Selecciona un usuario para actualizar.");
+                return;
+            }
+
+            // Abre el formulario con los datos del usuario seleccionado
+            FormRegistro formulario = new FormRegistro(usuarios, menu, seleccionado);
+
+            // Actualiza el listado cuando se cierre el formulario de edición
+            formulario.addWindowListener(new java.awt.event.WindowAdapter() {
+
+                @Override
+                public void windowClosed(java.awt.event.WindowEvent e) {
+                    // Vuelve a mostrar los datos actualizados del usuario
+                    lstUsuarios.repaint();
+                }
+            });
+            formulario.setVisible(true);        });
     }
 }

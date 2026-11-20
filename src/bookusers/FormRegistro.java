@@ -43,6 +43,9 @@ public class FormRegistro extends JFrame {
     private String rutaFoto = "";
     private static File ultimaCarpetaFoto;
 
+    //variable para despues comprobar si es nuevo o ya existe el usuario
+    private Usuario usuarioEditar;
+
     // Recibe la lista de usuarios y la referencia al menú principal
     public FormRegistro(ArrayList<Usuario> usuarios, FormMenu menu) {
 
@@ -84,12 +87,64 @@ public class FormRegistro extends JFrame {
             }
         });
 
-        // Guarda el usuario únicamente si los datos son válidos
+        // Valida los datos antes de guardarlos
         btnGuardar.addActionListener(e -> {
             if (validarCampos()) {
+
+                // Comprueba si estamos actualizando un usuario existente
+                if (usuarioEditar != null) {
+
+                    // Modifica los datos del mismo usuario sin cambiar su ID
+                    actualizarUsuario();
+
+                    // Confirma que los cambios se guardaron correctamente
+                    JOptionPane.showMessageDialog(this, "Usuario actualizado correctamente.");
+
+                    // Cierra el formulario de actualización
+                    dispose();
+                    return;
+                }
+
+                // Guarda normalmente cuando es un registro nuevo
                 guardarUsuario();
             }
         });
+    }
+
+    // Prepara el formulario para actualizar un usuario existente
+    public FormRegistro(ArrayList<Usuario> usuarios, FormMenu menu, Usuario usuarioEditar) {
+
+        // Reutiliza la configuración del constructor original
+        this(usuarios, menu);
+
+        // Guarda el usuario que vamos a modificar
+        this.usuarioEditar = usuarioEditar;
+
+        // Carga los datos existentes del usuario en el formulario
+        cargarDatosUsuario();
+    }
+
+    // Carga los datos del usuario existente en el formulario
+    private void cargarDatosUsuario() {
+
+        cmbTipoIdentificacion.setSelectedItem(usuarioEditar.getTipoIdentificacion());
+        txtNumeroIdentificacion.setText(usuarioEditar.getNumeroIdentificacion());
+        txtPrimerNombre.setText(usuarioEditar.getPrimerNombre());
+        txtSegundoNombre.setText(usuarioEditar.getSegundoNombre());
+        txtPrimerApellido.setText(usuarioEditar.getPrimerApellido());
+        txtSegundoApellido.setText(usuarioEditar.getSegundoApellido());
+        txtPassword.setText(usuarioEditar.getPassword());
+        txtTelefono.setText(usuarioEditar.getTelefono());
+        txtCorreo.setText(usuarioEditar.getCorreo());
+        rutaFoto = usuarioEditar.getRutaFoto();
+
+        // Muestra la fotografía guardada en el formulario
+        if (!InputFile.mostrar(lblFoto, rutaFoto)) {
+
+            // Muestra un texto si la fotografía no está disponible
+            InputFile.limpiar(lblFoto);
+            lblFoto.setText("Sin foto");
+        }
     }
 
     // Amplía las letras de los controles internos del selector de archivos.
@@ -157,22 +212,12 @@ public class FormRegistro extends JFrame {
         int id = menu.generarId();
 
         // Crea un objeto Usuario con los datos del formulario
-        Usuario nuevoUsuario = new Usuario(
-                id, tipoIdentificacion, numeroIdentificacion,
-                primerNombre, segundoNombre,
-                primerApellido, segundoApellido,
-                username, password, telefono, correo, rutaFoto
-        );
+        Usuario nuevoUsuario = new Usuario(id, tipoIdentificacion, numeroIdentificacion, primerNombre, segundoNombre, primerApellido, segundoApellido, username, password, telefono, correo, rutaFoto);
 
         usuarios.add(nuevoUsuario);
 
         // Confirma que el usuario fue registrado correctamente
-        JOptionPane.showMessageDialog(
-                this,
-                "Usuario registrado correctamente.\nID asignado: " + id,
-                "Registro exitoso",
-                JOptionPane.INFORMATION_MESSAGE
-        );
+        JOptionPane.showMessageDialog(this, "Usuario registrado correctamente.\nID asignado: " + id, "Registro exitoso", JOptionPane.INFORMATION_MESSAGE);
         limpiarFormulario();
     }
 
@@ -269,5 +314,20 @@ public class FormRegistro extends JFrame {
         txtPrimerNombre.getDocument().addDocumentListener(listener);
         txtPrimerApellido.getDocument().addDocumentListener(listener);
         txtSegundoApellido.getDocument().addDocumentListener(listener);
+    }
+
+    // Actualiza los datos del usuario existente
+    private void actualizarUsuario() {
+
+        usuarioEditar.setTipoIdentificacion((String) cmbTipoIdentificacion.getSelectedItem());
+        usuarioEditar.setNumeroIdentificacion(txtNumeroIdentificacion.getText().trim());
+        usuarioEditar.setPrimerNombre(txtPrimerNombre.getText().trim());
+        usuarioEditar.setSegundoNombre(txtSegundoNombre.getText().trim());
+        usuarioEditar.setPrimerApellido(txtPrimerApellido.getText().trim());
+        usuarioEditar.setSegundoApellido(txtSegundoApellido.getText().trim());
+        usuarioEditar.setPassword(txtPassword.getText().trim());
+        usuarioEditar.setTelefono(txtTelefono.getText().trim());
+        usuarioEditar.setCorreo(txtCorreo.getText().trim());
+        usuarioEditar.setRutaFoto(rutaFoto);
     }
 }

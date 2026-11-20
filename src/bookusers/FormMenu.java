@@ -48,7 +48,7 @@ public class FormMenu {
             registro.setVisible(true);
         });
         btnListado.addActionListener(e -> {
-           FormListado listado = new FormListado(usuarios);
+           FormListado listado = new FormListado(usuarios, this);
            listado.setVisible(true);
         });
     }
